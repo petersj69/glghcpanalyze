@@ -1,0 +1,47 @@
+# AI Triage — configuration
+# Single source of truth. Fill this in once; the prompts read from here.
+# Any value still containing <...> will fail preflight.
+
+project: <group/subgroup/project>        # GitLab project path
+gitlab_host: <https://gitlab.example.com>
+
+# Context Copilot must read before rating anything
+arch_doc: docs/architecture.md
+extra_context:                            # optional, add as many as useful
+  - docs/testing-strategy.md
+  # - docs/adr/
+
+# Which issues to process in the full run (phase 3)
+issue_filter: "state=opened"
+# Examples:
+#   "state=opened&milestone=Q3-2026"
+#   "state=opened&updated_after=2025-08-01"
+#   "state=opened&labels=team-alpha"
+
+# Calibration: closed issues with known effort. Leave empty and the orchestrator
+# will propose a set for you to confirm.
+calibration_issues: []                    # e.g. [412, 418, 431, 447, ...]
+
+# Execution
+batch_size: 15                            # analyse phase
+writeback_batch_size: 10
+output_csv: triage-results.csv
+calibration_csv: calibration-results.csv
+
+# Write-back
+dry_run: true                             # orchestrator flips this after the gate
+write_ratings: [high, med]                # first run: skip low/none to avoid noise
+write_needs_prep_label: true
+comment_language: en
+existing_triage_label: skip               # skip | re-rate
+
+# Labels — must already exist at group level (see runbook, setup step 1)
+labels:
+  high: "AI Support possible::high"
+  med: "AI Support possible::med"
+  low: "AI Support possible::low"
+  none: "AI Support possible::none"
+  needs_prep: "AI Support possible::needs-prep"
+
+# Sanity thresholds — the orchestrator flags, it does not silently correct
+expected_high_share_max: 0.25             # flag if >25 % rated high
