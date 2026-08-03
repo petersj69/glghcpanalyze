@@ -1,6 +1,9 @@
 # AI Triage — configuration
 # Single source of truth. Fill this in once; the prompts read from here.
 # Any value still containing <...> will fail preflight.
+#
+# In a public repo: copy this file to triage-config.local.yml (gitignored) and fill
+# in the copy — the prompts use the .local file when it exists.
 
 project: <group/subgroup/project>        # GitLab project path
 gitlab_host: <https://gitlab.example.com>

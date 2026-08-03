@@ -40,6 +40,12 @@ Fill in `triage-config.yml` before the first run. Anything left as `<...>` fails
 preflight, which is intentional: the alternative is Copilot quietly triaging the wrong
 project.
 
+If this folder lives in a public repo, don't fill in the tracked file: copy it to
+`triage-config.local.yml` next to it and fill that in instead. The prompts prefer the
+`.local` copy when it exists, and it is gitignored — your GitLab host and project path
+never get committed. The generated CSVs and `triage-report.md` are gitignored for the
+same reason: they contain your issue titles.
+
 The rest of this document explains *why* the process is shaped this way. You do not
 need to read it to run the triage, but you do need it to interpret the results.
 

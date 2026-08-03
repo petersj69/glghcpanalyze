@@ -13,31 +13,26 @@ approval, and every rating must be backed by real file paths found in your codeb
 
 | File | Role |
 |---|---|
-| [`ai-triage.prompt.md`](ai-triage.prompt.md) | Orchestrator — the prompt you invoke. Walks all phases, stops at four approval gates |
-| [`ai-triage-analyze.prompt.md`](ai-triage-analyze.prompt.md) | Phase 2: rates issues against a strict rubric, read-only, outputs a CSV |
-| [`ai-triage-writeback.prompt.md`](ai-triage-writeback.prompt.md) | Phase 3: writes the human-reviewed CSV back as comments + labels |
-| [`triage-config.yml`](triage-config.yml) | All configuration — fill this in first |
-| [`RUNBOOK-ai-triage.md`](RUNBOOK-ai-triage.md) | The full process: setup, calibration, pitfalls, sprint-planning loop |
+| [`.github/prompts/ai-triage.prompt.md`](.github/prompts/ai-triage.prompt.md) | Orchestrator — the prompt you invoke. Walks all phases, stops at four approval gates |
+| [`.github/prompts/ai-triage-analyze.prompt.md`](.github/prompts/ai-triage-analyze.prompt.md) | Phase 2: rates issues against a strict rubric, read-only, outputs a CSV |
+| [`.github/prompts/ai-triage-writeback.prompt.md`](.github/prompts/ai-triage-writeback.prompt.md) | Phase 3: writes the human-reviewed CSV back as comments + labels |
+| [`docs/ai-triage/triage-config.yml`](docs/ai-triage/triage-config.yml) | All configuration — fill this in first |
+| [`docs/ai-triage/RUNBOOK-ai-triage.md`](docs/ai-triage/RUNBOOK-ai-triage.md) | The full process: setup, calibration, pitfalls, sprint-planning loop |
 
 ## How to use it
 
-1. **Copy the files into your target repo** in the layout the orchestrator expects:
-
-   ```
-   .github/prompts/ai-triage.prompt.md
-   .github/prompts/ai-triage-analyze.prompt.md
-   .github/prompts/ai-triage-writeback.prompt.md
-   docs/ai-triage/RUNBOOK-ai-triage.md
-   docs/ai-triage/triage-config.yml
-   ```
+1. **Copy `.github/prompts/` and `docs/ai-triage/` into your target repo** — the
+   layout here is exactly what the orchestrator expects.
 
 2. **One-off setup** (~30 min, details in the [runbook](RUNBOOK-ai-triage.md)):
    create the five `AI Support possible::*` scoped labels at GitLab **group** level,
    make sure `.github/copilot-instructions.md` describes your architecture and test
    rules, and verify your GitLab MCP server can list issues, comment, and set labels.
 
-3. **Fill in `triage-config.yml`.** Any value still containing `<...>` fails
-   preflight on purpose.
+3. **Fill in the config.** Any value still containing `<...>` fails preflight on
+   purpose. In a public repo, copy `triage-config.yml` to `triage-config.local.yml`
+   (gitignored, preferred by the prompts) so your GitLab host and project path stay
+   uncommitted — same for the generated CSVs, which are gitignored too.
 
 4. **Run it.** In VS Code, with Copilot in agent mode:
 

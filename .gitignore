@@ -1,0 +1,7 @@
+# Generated per run — contain issue titles, keep out of the public repo
+triage-results.csv
+calibration-results.csv
+triage-report.md
+
+# Filled-in config with real GitLab host/project — keep local
+*.local.yml

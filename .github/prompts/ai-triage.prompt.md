@@ -9,7 +9,9 @@ You are running an AI-suitability triage over this project's open GitLab issues.
 Everything you need is in these files:
 
 - `docs/ai-triage/RUNBOOK-ai-triage.md` — the process, rationale, and pitfalls
-- `docs/ai-triage/triage-config.yml` — all configuration, single source of truth
+- `docs/ai-triage/triage-config.yml` — all configuration, single source of truth.
+  If `docs/ai-triage/triage-config.local.yml` exists, use it instead — it is the
+  filled-in copy that stays out of version control.
 - `.github/prompts/ai-triage-analyze.prompt.md` — phase 2, rating (read-only)
 - `.github/prompts/ai-triage-writeback.prompt.md` — phase 3, writing to GitLab
 

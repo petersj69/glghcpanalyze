@@ -13,8 +13,10 @@ Normally invoked by `ai-triage.prompt.md`. Can be run standalone.
 
 ## Configuration
 
-Read `docs/ai-triage/triage-config.yml`. Use `project`, `issue_filter`, `batch_size`,
-`output_csv`, `arch_doc`, `extra_context`, `existing_triage_label`.
+Read `docs/ai-triage/triage-config.yml` — or `triage-config.local.yml` next to it if
+that exists (the filled-in, untracked copy). Use `project`, `issue_filter`,
+`batch_size`, `output_csv`, `arch_doc`, `extra_context`, `existing_triage_label`,
+`comment_language`.
 
 If invoked for calibration, process only the IIDs in `calibration_issues` and write to
 `calibration_csv` instead.
@@ -31,8 +33,12 @@ If invoked for calibration, process only the IIDs in `calibration_issues` and wr
 4. Process in batches of `batch_size`. After **each** batch, append rows to
    `output_csv` and print one progress line (`batch 3/9 done, 45 issues rated`). Never
    hold more than one batch in working context.
-5. If `output_csv` already exists, read it first and skip issues already present. This
-   makes the run resumable after an interruption.
+5. When creating the CSV, write `# project: {project}` as its first line, before the
+   header. This records which project the ratings belong to; the write-back phase
+   refuses a CSV whose project does not match the config.
+6. If `output_csv` already exists, read it first and skip issues already present. This
+   makes the run resumable after an interruption — but if its `# project:` line does
+   not match the configured `project`, stop and report instead of appending.
 
 ## Per issue
 
@@ -90,10 +96,10 @@ CSV with header, one row per issue, `;` separated, UTF-8:
 | `pattern` | One of: `bugfix-with-repro`, `crud-endpoint`, `refactoring`, `test-gap`, `dependency-bump`, `config`, `docs`, `investigation`, `design`, `other` |
 | `files_touched` | Comma-separated real paths from step (b), max 5. Empty only if rating is `low`/`none` |
 | `test_coverage` | `yes` \| `partial` \| `no` \| `unknown` |
-| `rationale` | Max 2 sentences, English. Why this rating |
+| `rationale` | Max 2 sentences, written in `comment_language`. Why this rating |
 | `needs_prep` | `yes` \| `no` — would better issue quality raise the rating? |
-| `prep_action` | If `needs_prep = yes`: the single concrete thing that would raise it. Else empty |
-| `recommendation` | Max 1 sentence: how to approach it with Copilot, or why not to |
+| `prep_action` | If `needs_prep = yes`: the single concrete thing that would raise it, in `comment_language`. Else empty |
+| `recommendation` | Max 1 sentence, in `comment_language`: how to approach it with Copilot, or why not to |
 
 ## Final summary
 

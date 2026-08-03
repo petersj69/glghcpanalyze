@@ -13,12 +13,17 @@ Normally invoked by `ai-triage.prompt.md`. Can be run standalone.
 
 ## Configuration
 
-Read `docs/ai-triage/triage-config.yml`. Use `project`, `output_csv`, `write_ratings`,
-`write_needs_prep_label`, `writeback_batch_size`, `dry_run`, `labels`.
+Read `docs/ai-triage/triage-config.yml` — or `triage-config.local.yml` next to it if
+that exists (the filled-in, untracked copy). Use `project`, `output_csv`,
+`write_ratings`, `write_needs_prep_label`, `writeback_batch_size`, `dry_run`,
+`labels`, `comment_language`.
 
 ## Procedure
 
-1. Read `output_csv`. Filter to rows whose `rating` is in `write_ratings`.
+1. Read `output_csv`. Its first line must be `# project: <path>` and the path must
+   equal `project` from the config — if it is missing or differs, **abort and report**:
+   the CSV was produced for a different project and writing it would label the wrong
+   issues. Then filter to rows whose `rating` is in `write_ratings`.
 2. Print the number of issues about to be modified and **wait for confirmation** before
    the first write.
 3. Per issue, in this order:
@@ -67,7 +72,9 @@ Otherwise `{prep_block}` is empty — no placeholder text.
 
 ## Rules
 
-- English, no emoji.
+- Write the comment in `comment_language` from the config: translate the template's
+  fixed strings (headings, table labels, the footer) into that language. The CSV
+  fields are already in it. No emoji.
 - Keep the comment exactly as templated. Do not add commentary, do not expand the
   rationale, do not soften it.
 - If a CSV field is empty, drop the corresponding table row rather than writing "n/a".
